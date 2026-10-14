@@ -1,0 +1,81 @@
+
+# React / Vite / Node.js
+node_modules/
+dist/
+dist-ssr/
+.output/
+.vinxi/
+.tanstack/
+.nitro/
+coverage/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.local
+
+# Spring Boot / Java / Maven
+target/
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# Backend local data
+backend/data/
+
+# Private keys and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+secrets/
+credentials/
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+
+# Editors and IDEs
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# IDE/build output and local database files
+backend/bin/
+*.db
+*.mv.db
+*.lock.db

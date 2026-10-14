@@ -1,0 +1,33 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: pennywise-backend
+  datasource:
+    url: jdbc:h2:file:./data/pennywise;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        auto_quote_keyword: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+pennywise:
+  jwt:
+    # 256-bit HMAC key (can be overridden via JWT_SECRET env var)
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    # 24 hours in milliseconds
+    expiration-ms: 86400000
+openrouter:
+  api-key: ${OPENROUTER_API_KEY:}
