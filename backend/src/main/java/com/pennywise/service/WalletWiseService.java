@@ -1,3 +1,4 @@
+
 package com.pennywise.service;
 
 import java.math.BigDecimal;
@@ -12,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -31,17 +31,23 @@ public class WalletWiseService {
     private final ObjectMapper objectMapper;
     private final RestClient restClient;
 
-    // Read the Render environment variable first.
-    // Keep the existing Spring property as a fallback.
-    @Value("${OPENROUTER_API_KEY:${openrouter.api-key:}}")
-    private String apiKey;
-
     public WalletWiseService(
             TransactionRepository transactionRepository,
             ObjectMapper objectMapper) {
         this.transactionRepository = transactionRepository;
         this.objectMapper = objectMapper;
         this.restClient = RestClient.create();
+    }
+
+    // Read the API key directly from the backend environment.
+    private String getApiKey() {
+        String key = System.getenv("OPENROUTER_API_KEY");
+
+        if (key == null || key.isBlank()) {
+            key = System.getenv("openrouter.api-key");
+        }
+
+        return key == null ? "" : key.trim();
     }
 
     public String ask(String question, User user) throws Exception {
@@ -158,7 +164,7 @@ public class WalletWiseService {
                     + "recorded for the current month.";
         }
 
-        // Calculate the monthly category breakdown directly.
+        // Calculate monthly category totals directly.
         if (asksMonthly && asksCategory) {
             StringBuilder result = new StringBuilder();
 
@@ -191,7 +197,7 @@ public class WalletWiseService {
             return result.toString();
         }
 
-        // Calculate total monthly expenses directly.
+        // Calculate monthly expenses directly.
         if (asksMonthly && asksExpense && asksTotal) {
             return "## Spending summary for " + currentMonth + "\n\n"
                     + "**Total expenses: "
@@ -201,12 +207,14 @@ public class WalletWiseService {
                     + " are included. INCOME transactions are excluded.";
         }
 
-        // Fail clearly if the API key is not configured.
-        if (apiKey == null || apiKey.isBlank()) {
+        // Read the key when an AI response is needed.
+        String apiKey = getApiKey();
+
+        if (apiKey.isBlank()) {
             throw new IllegalStateException(
                     "OpenRouter API key is missing. "
-                    + "Set the OPENROUTER_API_KEY environment variable "
-                    + "in your backend environment settings.");
+                    + "Check OPENROUTER_API_KEY in the backend "
+                    + "environment settings.");
         }
 
         String prompt = """
